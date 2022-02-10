@@ -31,15 +31,8 @@ checkUser = (req, res, next) => {
   });
 };
 
-checkRoles = (req, res, next) => {
-  if (req.body.roles) {
-  }
-  next();
-};
-
 const verifySignUp = {
   checkUser,
-  checkRoles,
 };
 
 module.exports = verifySignUp;

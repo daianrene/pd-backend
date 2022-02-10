@@ -16,8 +16,20 @@ verifyToken = (req, res, next) => {
   });
 };
 
+isAdmin = (req, res, next) => {
+  User.findByPk(req.userId).then((user) => {
+    if (user.rol === "admin") {
+      next();
+      return;
+    }
+    res.status(403).send({ message: "No es admin" });
+    return;
+  });
+};
+
 const authJwt = {
   verifyToken,
+  isAdmin,
 };
 
 module.exports = authJwt;

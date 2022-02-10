@@ -1,20 +1,17 @@
 const db = require("../models");
 const config = require("../config/auth");
 const jwt = require("jsonwebtoken");
-const user = require("../models/user");
 
 const User = db.user;
-const Role = db.role;
 
 exports.signup = (req, res) => {
   User.create({
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
+    rol: req.body.rol,
   })
-    .then((user) =>
-      user.setRoles([1]).then(() => res.send({ message: "Usuario registrado" }))
-    )
+    .then((user) => res.send({ message: "Usuario registrado" }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
@@ -40,7 +37,7 @@ exports.sigin = (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: ["user"],
+        rol: user.rol,
         accessToken: token,
       });
     })

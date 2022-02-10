@@ -1,12 +1,38 @@
-exports.allAccess = (req, res) => {
-  res.status(200).send("Public Content.");
+const db = require("../models");
+
+const User = db.user;
+
+exports.allUsers = async (req, res) => {
+  try {
+    const usuarios = await User.findAll();
+    res.send(usuarios);
+  } catch (err) {
+    res.status(500).send({ message: "test" });
+  }
 };
-exports.userBoard = (req, res) => {
-  res.status(200).send("User Content.");
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const prom = await User.destroy({
+      where: {
+        id: req.query.id,
+      },
+    });
+    res.send({ message: "Se borro correctamente" });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
 };
-exports.adminBoard = (req, res) => {
-  res.status(200).send("Admin Content.");
-};
-exports.moderatorBoard = (req, res) => {
-  res.status(200).send("Moderator Content.");
+
+exports.updateUser = async (req, res) => {
+  try {
+    const prom = await User.update(req.body, {
+      where: {
+        id: req.body.id,
+      },
+    });
+    res.send({ message: prom });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
 };

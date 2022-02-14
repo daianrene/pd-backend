@@ -1,4 +1,4 @@
-const { authJwt } = require("../middleware");
+const { authJwt, verifySignUp } = require("../middleware");
 const controller = require("../controllers/user");
 const router = require("express").Router();
 
@@ -19,14 +19,14 @@ module.exports = (app) => {
 
   router.delete(
     "/usuarios/delete",
-    //[authJwt.verifyToken, authJwt.isAdmin],
+    [authJwt.verifyToken, authJwt.isAdmin],
 
     controller.deleteUser
   );
 
   router.put(
     "/usuarios/update",
-    //[authJwt.verifyToken, authJwt.isAdmin],
+    [authJwt.verifyToken, authJwt.isAdmin],
     controller.updateUser
   );
 

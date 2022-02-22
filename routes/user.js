@@ -12,23 +12,35 @@ module.exports = (app) => {
   // });
 
   router.get(
-    "/usuarios",
-    //[authJwt.verifyToken, authJwt.isAdmin],
+    "/admin/usuarios",
+    [authJwt.verifyToken, authJwt.isAdmin],
     controller.allUsers
   );
 
   router.delete(
-    "/usuarios/delete",
+    "/admin/usuarios/delete",
     [authJwt.verifyToken, authJwt.isAdmin],
 
     controller.deleteUser
   );
 
   router.put(
-    "/usuarios/update",
+    "/admin/usuarios/update",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.updateUser
   );
 
-  app.use("/api/admin", router);
+  router.post(
+    "/admin/usuarios/message",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.sendMessage
+  );
+
+  router.get(
+    "/usuarios/messages",
+    //[authJwt.verifyToken],
+    controller.getMessages
+  );
+
+  app.use("/api", router);
 };

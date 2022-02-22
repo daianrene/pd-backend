@@ -11,7 +11,7 @@ exports.signup = (req, res) => {
     password: req.body.password,
     rol: req.body.rol,
   })
-    .then((user) => res.send({ message: "Usuario registrado" }))
+    .then((user) => res.send(user))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 

@@ -1,13 +1,14 @@
 const db = require("../models");
 
 const User = db.user;
+const Message = db.message;
 
 exports.allUsers = async (req, res) => {
   try {
     const usuarios = await User.findAll();
     res.send(usuarios);
   } catch (err) {
-    res.status(500).send({ message: "test" });
+    res.status(500).send({ message: "Error en la base de datos" });
   }
 };
 
@@ -34,5 +35,30 @@ exports.updateUser = async (req, res) => {
     res.send({ message: prom });
   } catch (err) {
     res.status(500).send({ message: err });
+  }
+};
+
+exports.sendMessage = async (req, res) => {
+  try {
+    const prom = await Message.create({
+      message: req.body.message,
+      read: false,
+      userId: req.body.toUserId,
+    });
+    res.send({ message: prom });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};
+
+exports.getMessages = async (req, res) => {
+  try {
+    const mensajes = await Message.findAll({
+      where: { userId: req.query.userId },
+      order: [["id", "DESC"]],
+    });
+    res.send(mensajes);
+  } catch (err) {
+    res.status(500).send({ message: "Error en la base de datos" });
   }
 };

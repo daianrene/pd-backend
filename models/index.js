@@ -10,9 +10,9 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     acquire: config.pool.acquire,
     idle: config.pool.idle,
   },
-  logging: true,
+  logging: false,
   dialectOptions: {
-    useUTC: false, // for reading from database
+    // useUTC: false, // for reading from database
     dateStrings: true,
     typeCast: function (field, next) {
       // for reading from database
@@ -23,7 +23,7 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     },
   },
 
-  timezone: "-3:00", // for writing to database
+  timezone: "-03:00", // for writing to database
 });
 
 const db = {};
@@ -33,12 +33,21 @@ db.sequelize = sequelize;
 
 db.user = require("./user.js")(sequelize, Sequelize);
 db.message = require("./message.js")(sequelize, Sequelize);
+db.reporte = require("./reporte.js")(sequelize, Sequelize);
 
 db.user.hasMany(db.message, {
   foreignKey: "userId",
 });
 
+db.user.hasMany(db.reporte, {
+  foreignKey: "userId",
+});
+
 db.message.belongsTo(db.user, {
+  foreignKey: "userId",
+});
+
+db.reporte.belongsTo(db.user, {
   foreignKey: "userId",
 });
 

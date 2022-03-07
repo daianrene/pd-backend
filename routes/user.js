@@ -38,8 +38,26 @@ module.exports = (app) => {
 
   router.get(
     "/usuarios/messages",
-    //[authJwt.verifyToken],
+    [authJwt.verifyToken],
     controller.getMessages
+  );
+
+  router.put(
+    "/usuarios/addreporte",
+    [authJwt.verifyToken],
+    controller.postReporte
+  );
+
+  router.get(
+    "/usuarios/reportes",
+    [authJwt.verifyToken],
+    controller.getReportes
+  );
+
+  router.get(
+    "/usuarios/allreportes",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.getAllReportes
   );
 
   app.use("/api", router);

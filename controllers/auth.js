@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const User = db.user;
 
-exports.signup = (req, res) => {
+const signup = (req, res) => {
   User.create({
     username: req.body.username,
     email: req.body.email,
@@ -15,7 +15,7 @@ exports.signup = (req, res) => {
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
-exports.sigin = (req, res) => {
+const sigin = (req, res) => {
   User.findOne({
     where: {
       username: req.body.username,
@@ -30,7 +30,7 @@ exports.sigin = (req, res) => {
           .send({ accesToken: null, message: "Contraseña incorrecta" });
 
       const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400,
+        expiresIn: 7200,
       });
 
       res.status(200).send({
@@ -42,4 +42,9 @@ exports.sigin = (req, res) => {
       });
     })
     .catch((err) => res.status(500).send({ message: err.message }));
+};
+
+module.exports = {
+  signup,
+  sigin,
 };

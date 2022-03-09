@@ -96,6 +96,13 @@ const postReporte = async (req, res) => {
 const getReportes = async (req, res) => {
   try {
     const reportes = await Reporte.findAll({
+      include: [
+        {
+          model: User,
+          required: true,
+          attributes: ["username"],
+        },
+      ],
       attributes: ["turno", "fecha", "detalle", "userId"],
       where: { userId: req.query.userId },
       order: [
@@ -112,6 +119,13 @@ const getReportes = async (req, res) => {
 const getAllReportes = async (req, res) => {
   try {
     const reportes = await Reporte.findAll({
+      include: [
+        {
+          model: User,
+          required: true,
+          attributes: ["username"],
+        },
+      ],
       attributes: ["turno", "fecha", "detalle", "userId"],
       order: [
         ["fecha", "DESC"],

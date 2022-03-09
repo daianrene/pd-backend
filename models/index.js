@@ -10,7 +10,7 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     acquire: config.pool.acquire,
     idle: config.pool.idle,
   },
-  logging: false,
+  logging: true,
   dialectOptions: {
     // useUTC: false, // for reading from database
     dateStrings: true,

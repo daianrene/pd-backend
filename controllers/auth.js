@@ -30,7 +30,7 @@ const sigin = (req, res) => {
           .send({ accesToken: null, message: "Contraseña incorrecta" });
 
       const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 7200,
+        expiresIn: 21600,
       });
 
       res.status(200).send({

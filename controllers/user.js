@@ -98,6 +98,10 @@ const getReportes = async (req, res) => {
     const reportes = await Reporte.findAll({
       attributes: ["turno", "fecha", "detalle", "userId"],
       where: { userId: req.query.userId },
+      order: [
+        ["fecha", "DESC"],
+        ["turno", "DESC"],
+      ],
     });
     res.send(reportes);
   } catch (err) {
@@ -109,6 +113,10 @@ const getAllReportes = async (req, res) => {
   try {
     const reportes = await Reporte.findAll({
       attributes: ["turno", "fecha", "detalle", "userId"],
+      order: [
+        ["fecha", "DESC"],
+        ["turno", "DESC"],
+      ],
     });
     console.log(reportes);
     res.send(reportes);

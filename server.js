@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 // rutas
 require("./routes/auth")(app);
 require("./routes/user")(app);
+require("./routes/admin")(app);
 
 const PORT = 8080;
 app.listen(PORT, () => {

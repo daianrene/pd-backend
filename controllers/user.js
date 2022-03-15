@@ -4,58 +4,10 @@ const User = db.user;
 const Message = db.message;
 const Reporte = db.reporte;
 
-const allUsers = async (req, res) => {
-  try {
-    const usuarios = await User.findAll();
-    res.send(usuarios);
-  } catch (err) {
-    res.status(500).send({ message: "Error en la base de datos" });
-  }
-};
-
-const deleteUser = async (req, res) => {
-  try {
-    const prom = await User.destroy({
-      where: {
-        id: req.query.id,
-      },
-    });
-    res.send({ message: "Se borro correctamente" });
-  } catch (err) {
-    res.status(500).send({ message: err });
-  }
-};
-
-const updateUser = async (req, res) => {
-  try {
-    const prom = await User.update(req.body, {
-      where: {
-        id: req.body.id,
-      },
-    });
-    res.send({ message: prom });
-  } catch (err) {
-    res.status(500).send({ message: err });
-  }
-};
-
-const sendMessage = async (req, res) => {
-  try {
-    const prom = await Message.create({
-      message: req.body.message,
-      read: false,
-      userId: req.body.toUserId,
-    });
-    res.send({ message: prom });
-  } catch (err) {
-    res.status(500).send({ message: err });
-  }
-};
-
 const getMessages = async (req, res) => {
   try {
     const mensajes = await Message.findAll({
-      where: { userId: req.query.userId },
+      where: { userId: req.userId },
       order: [["id", "DESC"]],
     });
     res.send(mensajes);
@@ -65,9 +17,14 @@ const getMessages = async (req, res) => {
 };
 
 const postReporte = async (req, res) => {
+  console.log(req.body);
   try {
     const reporte = await Reporte.findOne({
-      where: { turno: req.body.turno, fecha: req.body.fecha },
+      where: {
+        turno: req.body.turno,
+        fecha: req.body.fecha,
+        userId: req.body.user,
+      },
     });
     if (reporte !== null) {
       const updtReporte = await Reporte.update(
@@ -95,7 +52,7 @@ const postReporte = async (req, res) => {
 
 const getReportes = async (req, res) => {
   try {
-    const reportes = await Reporte.findAll({
+    let reportes = await Reporte.findAll({
       include: [
         {
           model: User,
@@ -104,10 +61,10 @@ const getReportes = async (req, res) => {
         },
       ],
       attributes: ["turno", "fecha", "detalle", "userId"],
-      where: { userId: req.query.userId },
       order: [
         ["fecha", "DESC"],
         ["turno", "DESC"],
+        ["updatedAt", "DESC"],
       ],
     });
     res.send(reportes);
@@ -116,37 +73,22 @@ const getReportes = async (req, res) => {
   }
 };
 
-const getAllReportes = async (req, res) => {
+const readMessage = async (req, res) => {
   try {
-    const reportes = await Reporte.findAll({
-      include: [
-        {
-          model: User,
-          required: true,
-          attributes: ["username"],
-        },
-      ],
-      attributes: ["turno", "fecha", "detalle", "userId"],
-      order: [
-        ["fecha", "DESC"],
-        ["turno", "DESC"],
-      ],
-    });
-    console.log(reportes);
-    res.send(reportes);
+    const prom = await Message.update(
+      { read: 1 },
+      { where: { id: req.body.idMessage } }
+    );
+    res.send();
   } catch (err) {
+    console.log(err);
     res.status(500).send({ message: "Error en la base de datos" });
   }
 };
 
 module.exports = {
-  allUsers,
-  deleteUser,
   getMessages,
-  updateUser,
-  getMessages,
-  sendMessage,
   postReporte,
   getReportes,
-  getAllReportes,
+  readMessage,
 };
